@@ -1,12 +1,17 @@
+open Page;
+
 [@react.component]
 let make = () => {
-  let url = ReasonReactRouter.useUrl();
-  let inner =
-    switch (url.path) {
-    | ["cluster", id] => <Cluster id />
-    | _ =>
-      ReasonReactRouter.push("/cluster/f0");
-      React.null;
-    };
-  <> <Header /> inner </>;
+  let page = usePage();
+  <>
+    <Header page />
+    {switch (page) {
+     | Index =>
+       ReasonReactRouter.replace("/cluster/f0");
+       React.null;
+     | Cluster(id) => <Cluster id />
+     | Settings => <Settings />
+     | NotFound => <NotFound />
+     }}
+  </>;
 };

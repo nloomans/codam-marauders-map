@@ -1,4 +1,3 @@
 [@react.component]
-let make = (~id: string) => {
-	<div>{React.string("This is cluster " ++ id)}</div>
-};
+let make = (~id: Page.cluster) =>
+  <div> {React.string("This is cluster " ++ Page.showCluster(id))} </div>;

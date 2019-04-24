@@ -1,18 +1,5 @@
-open Types;
-
-let showCluster = (cluster: cluster) =>
-  switch (cluster) {
-  | F0 => "Floor 0"
-  | F1 => "Floor 1"
-  };
-
-let showTab = (tab: tabs) =>
-  switch (tab) {
-  | Cluster(cluster) => showCluster(cluster)
-  | Settings => "Settings"
-  };
+open Page;
 
 [@react.component]
-let make = (~tab: tabs) => {
-  <MaterialUi.Tab label={React.string(showTab(tab))} />;
-};
+let make = (~page: page) =>
+  <MaterialUi.Tab label={React.string(showPage(page))} />;

@@ -1,16 +1,6 @@
-open Types;
+open Page;
 
 let allTabs = [Cluster(F0), Cluster(F1), Settings];
-
-let useTab = () => {
-  let url = ReasonReactRouter.useUrl();
-  switch (url.path) {
-  | ["cluster", "f0"] => Some(Cluster(F0))
-  | ["cluster", "f1"] => Some(Cluster(F1))
-  | ["settings"] => Some(Settings)
-  | _ => None
-  };
-};
 
 let indexOf = (needle: 'a, haystack: list('a)) =>
   haystack
@@ -19,18 +9,18 @@ let indexOf = (needle: 'a, haystack: list('a)) =>
   |> fst;
 
 [@react.component]
-let make = () => {
-  let tab = useTab();
-  let tabs = allTabs |> List.map(tab => <Tab tab />);
+let make = (~page: page) => {
+  let tabs = allTabs |> List.map(tab => <Tab page=tab />);
 
-  let selected =
-    switch (tab) {
-    | Some(tab) => indexOf(tab, allTabs)
-    | None => (-1) // MaterialUi.Tabs ignores invalid values
+  let selectedTabIndex =
+    if (allTabs |> List.exists(tab => tab == page)) {
+      indexOf(page, allTabs);
+    } else {
+      (-1); // Don't underline anything
     };
 
-  <MaterialUi.AppBar>
-    <MaterialUi.Tabs value=selected>
+  <MaterialUi.AppBar position=`Static>
+    <MaterialUi.Tabs value=selectedTabIndex>
       {ReasonReact.array(Array.of_list(tabs))}
     </MaterialUi.Tabs>
   </MaterialUi.AppBar>;
