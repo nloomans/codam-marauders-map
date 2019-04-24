@@ -4,6 +4,7 @@ open Page;
 let make = () => {
   let page = usePage();
   <>
+    <MaterialUi.CssBaseline />
     <Header page />
     {switch (page) {
      | Index =>
