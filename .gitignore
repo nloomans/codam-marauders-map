@@ -1,8 +1,12 @@
-.DS_Store
-.merlin
-.bsb.lock
+# Generic
+
 npm-debug.log
-/lib/bs/
-/node_modules/
-*.bs.js
-/build
+node_modules/
+
+# Client
+
+/client/build
+/client/lib/bs/
+/client/**/*.bs.js
+/client/.merlin
+/client/.bsb.lock
