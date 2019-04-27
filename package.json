@@ -1,0 +1,28 @@
+{
+  "name": "codam-mapper",
+  "version": "0.0.1",
+  "description": "A very reasonable (and early alpha) map for the codam clusters",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nloomans/codam-mapper.git"
+  },
+  "author": "Emily Martins <emily.flakeheart@gmail.com>, Noah Loomans <noahloomans@protonmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nloomans/codam-mapper/issues"
+  },
+  "homepage": "https://github.com/nloomans/codam-mapper#readme",
+  "dependencies": {
+    "@types/next": "^8.0.4",
+    "@zeit/next-typescript": "^1.1.1",
+    "next": "^8.1.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
