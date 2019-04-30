@@ -1,5 +1,5 @@
 {
-  "name": "codam-mapper",
+  "name": "codam-marauders-map",
   "version": "0.0.1",
   "description": "A very reasonable (and early alpha) map for the codam clusters",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nloomans/codam-mapper.git"
+    "url": "git+https://github.com/nloomans/codam-marauders-map.git"
   },
   "author": "Emily Martins <emily.flakeheart@gmail.com>, Noah Loomans <noahloomans@protonmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nloomans/codam-mapper/issues"
+    "url": "https://github.com/nloomans/codam-marauders-map/issues"
   },
-  "homepage": "https://github.com/nloomans/codam-mapper#readme",
+  "homepage": "https://github.com/nloomans/codam-marauders-map#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "dotenv": "^7.0.0",
