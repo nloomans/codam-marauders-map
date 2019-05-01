@@ -1,17 +1,26 @@
 import * as http from 'http'
-import makeExpress = require('express');
 import next = require('next');
+
+import express = require('express');
+import session = require('express-session');
+import cookieParser = require('cookie-parser');
+import * as bodyParser from 'body-parser';
+
 import makeIo = require('socket.io');
+
+import * as passport from 'passport';
+import FortyTwoStrategy = require('passport-42');
+
 import pull from './pull';
 import { Locations } from '../types';
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
 
-const app = next({ dev });
-const handle = app.getRequestHandler();
-const express = makeExpress();
-const httpServer = new http.Server(express);
+const nextInstance = next({ dev });
+const handle = nextInstance.getRequestHandler();
+const app = express();
+const httpServer = new http.Server(app);
 const io = makeIo(httpServer);
 
 function main() {
@@ -32,7 +41,50 @@ function main() {
         }
     });
 
-    express.get('*', (req, res) => {
+    app.use(session({ secret: 'cats', resave: false, saveUninitialized: false }));
+    app.use(cookieParser());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    if (process.env.UID === undefined || process.env.SECRET === undefined) {
+        throw "Missing UID or SECRET env. Do you have a .env file?";
+    }
+
+    passport.use(new FortyTwoStrategy(
+        {
+            clientID: process.env.UID,
+            clientSecret: process.env.SECRET,
+            callbackURL: 'http://localhost:3000/auth/callback'
+        },
+        (_accessToken, _refreshToken, profile, cb) => {
+            //console.log(accessToken, refreshToken, profile, cb);
+            console.log('logged in', profile.id, profile.username);
+            cb(null, { id: profile.id, login: profile.username });
+        }
+    ));
+
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done) {
+        done(null, user);
+    });
+
+    app.get('/auth', passport.authenticate('42'));
+    app.get('/auth/callback',
+        passport.authenticate('42', { failureRedirect: '/login-failed' }),
+        (_req, res) => res.redirect('/'),
+    );
+
+    app.get('/whoami',
+        (req, res) => {
+            res.json(req.user);
+        }
+    );
+
+    app.get('*', (req, res) => {
         return handle(req, res);
     });
 
@@ -46,4 +98,4 @@ function exitWithError(ex: Error) {
     process.exit(1)
 }
 
-app.prepare().then(main).catch(exitWithError);
+nextInstance.prepare().then(main).catch(exitWithError);

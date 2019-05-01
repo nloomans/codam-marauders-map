@@ -17,8 +17,12 @@
         "skipLibCheck": true,
         "baseUrl": ".",
         "typeRoots": [
-            "./node_modules/@types"
+            "./node_modules/@types",
+            "./definitions"
         ],
+        "paths": {
+            "*": ["./definitions/*"]
+        },
         "lib": [
             "dom",
             "es2015",
