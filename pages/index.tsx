@@ -1,6 +1,7 @@
 import { NextFunctionComponent } from 'next';
 import makeIo from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import View from '../components/View';
 import { Locations } from '../types';
 
 type Props = {
@@ -26,7 +27,7 @@ const useLocations = () => {
     return locations;
 };
 
-const View: NextFunctionComponent<Props> = () => {
+const Index: NextFunctionComponent<Props> = () => {
     const locations = useLocations();
 
     if (locations == undefined) {
@@ -42,8 +43,9 @@ const View: NextFunctionComponent<Props> = () => {
                     <li key={login}>{login} - {locations[login]}</li>
                 )}
             </ul>
+            <View locations={locations} />
         </main>
     )
 };
 
-export default View
+export default Index
