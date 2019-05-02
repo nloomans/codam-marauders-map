@@ -6,13 +6,14 @@ import session = require('express-session');
 import cookieParser = require('cookie-parser');
 import * as bodyParser from 'body-parser';
 
+import * as passport from 'passport';
+import FortyTwoStrategy = require('passport-42');
+
 import * as redis from 'redis';
 import makeRedisStore = require('connect-redis');
 
 import makeIo = require('socket.io');
-
-import * as passport from 'passport';
-import FortyTwoStrategy = require('passport-42');
+import passportSocketIo = require('passport.socketio');
 
 import pull from './pull';
 import { Locations } from '../types';
@@ -27,6 +28,9 @@ const httpServer = new http.Server(app);
 const io = makeIo(httpServer);
 const redisClient = redis.createClient();
 const RedisStore = makeRedisStore(session);
+const store = new RedisStore({ client: redisClient });
+
+const SESSION_SECRET = 'TODO: Replace this with something randomly generated';
 
 function main() {
     let locations: Locations = {};
@@ -36,6 +40,13 @@ function main() {
         console.log(`Sending locations to ${Object.keys(io.sockets.connected).length} clients`);
         io.emit('locations', locations);
     }).catch(exitWithError);
+
+    io.use(passportSocketIo.authorize({
+        cookieParser: cookieParser,
+        key: 'connect.sid',
+        secret: SESSION_SECRET,
+        store,
+    }));
 
     io.on('connection', (socket) => {
         if (locations) {
@@ -47,8 +58,8 @@ function main() {
     });
 
     app.use(session({
-        store: new RedisStore({ client: redisClient }),
-        secret: 'TODO: Replace this with something randomly generated',
+        store,
+        secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
     }));

@@ -8,44 +8,71 @@ type Props = {
     login?: string,
 };
 
-const useLocations = () => {
-    const [locations, setLocations] =
-        useState<Locations | undefined>(undefined);
+type LocationsState
+    = LocationsSuccessfulState
+    | LocationsErrorState
+    | LocationsLoadingState;
+
+type LocationsSuccessfulState = {
+    type: 'successful';
+    locations: Locations;
+}
+
+type LocationsErrorState = {
+    type: 'error';
+    error: string;
+}
+
+type LocationsLoadingState = {
+    type: 'loading';
+}
+
+const useLocations = (): LocationsState => {
+    const [state, setState] = useState<LocationsState>({ type: 'loading' });
 
     useEffect(() => {
         const socket = makeIo();
 
         socket.on('locations', (locations: Locations) => {
-            setLocations(locations);
-        })
+            setState({ type: 'successful', locations });
+        });
+
+        function onError(error: string) {
+            setState({ type: 'error', error });
+        }
+
+        socket.on('connect_error', onError);
+        socket.on('error', onError);
 
         return () => {
             socket.close();
         };
     }, []);
 
-    return locations;
+    return state;
 };
 
 const Index: NextFunctionComponent<Props> = () => {
-    const locations = useLocations();
+    const state = useLocations();
 
-    if (locations == undefined) {
-        return <main>Loading...</main>
+    switch (state.type)
+    {
+        case 'successful':
+            return (
+                <main>
+                    <ul>
+                        {Object.keys(state.locations).map((login) =>
+                            <li key={login}>{login} - {state.locations[login]}</li>
+                        )}
+                    </ul>
+                    <View locations={state.locations} />
+                </main>
+            );
+        case 'error':
+            return <main>Failed to connect: {state.error}</main>
+        case 'loading':
+            return <main>Loading...</main>
     }
-
-    console.log(locations);
-
-    return (
-        <main>
-            <ul>
-                {Object.keys(locations).map((login) =>
-                    <li key={login}>{login} - {locations[login]}</li>
-                )}
-            </ul>
-            <View locations={locations} />
-        </main>
-    )
 };
 
 export default Index
