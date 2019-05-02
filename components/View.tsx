@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Locations } from "types";
+import { Locations } from "../types";
 import * as map from "../resources/map"
 
 type Props = {

@@ -14,7 +14,6 @@ interface Options {
 	callbackURL: string,
 };
 
-/*~ Write your module's methods and properties in this class */
 declare class FortyTwoStrategy extends Strategy {
     constructor(
 		options: Options,

@@ -17,11 +17,10 @@
         "skipLibCheck": true,
         "baseUrl": ".",
         "typeRoots": [
-            "./node_modules/@types",
-            "./definitions"
+            "./node_modules/@types"
         ],
         "paths": {
-            "*": ["./definitions/*"]
+            "*": ["definitions/*"]
         },
         "lib": [
             "dom",
