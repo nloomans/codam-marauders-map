@@ -6,6 +6,9 @@ import session = require('express-session');
 import cookieParser = require('cookie-parser');
 import * as bodyParser from 'body-parser';
 
+import * as redis from 'redis';
+import makeRedisStore = require('connect-redis');
+
 import makeIo = require('socket.io');
 
 import * as passport from 'passport';
@@ -22,6 +25,8 @@ const handle = nextInstance.getRequestHandler();
 const app = express();
 const httpServer = new http.Server(app);
 const io = makeIo(httpServer);
+const redisClient = redis.createClient();
+const RedisStore = makeRedisStore(session);
 
 function main() {
     let locations: Locations = {};
@@ -41,7 +46,12 @@ function main() {
         }
     });
 
-    app.use(session({ secret: 'cats', resave: false, saveUninitialized: false }));
+    app.use(session({
+        store: new RedisStore({ client: redisClient }),
+        secret: 'TODO: Replace this with something randomly generated',
+        resave: false,
+        saveUninitialized: false,
+    }));
     app.use(cookieParser());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(passport.initialize());
@@ -58,8 +68,6 @@ function main() {
             callbackURL: 'http://localhost:3000/auth/callback'
         },
         (_accessToken, _refreshToken, profile, cb) => {
-            //console.log(accessToken, refreshToken, profile, cb);
-            console.log('logged in', profile.id, profile.username);
             cb(null, { id: profile.id, login: profile.username });
         }
     ));
