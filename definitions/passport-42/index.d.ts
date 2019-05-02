@@ -18,6 +18,11 @@ interface Options {
 declare class FortyTwoStrategy extends Strategy {
     constructor(
 		options: Options,
-		callback: (accessToken: any, refreshToken: any, profile: any, cb: any) => void,
+		callback: (
+			accessToken: string,
+			refreshToken: string,
+			profile: any,
+			cb: (err: Error | null | undefined, user: any) => void
+		) => void,
 	);
 }

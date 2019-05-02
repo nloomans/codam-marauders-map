@@ -65,7 +65,7 @@ function main() {
         {
             clientID: process.env.UID,
             clientSecret: process.env.SECRET,
-            callbackURL: 'http://localhost:3000/auth/callback'
+            callbackURL: 'http://localhost:3000/auth/callback',
         },
         (_accessToken, _refreshToken, profile, cb) => {
             cb(null, { id: profile.id, login: profile.username });
