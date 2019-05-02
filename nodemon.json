@@ -1,6 +1,8 @@
 {
     "watch": [
-        "server"
+        "server",
+        "types",
+        "definitions"
     ],
     "ext": "ts",
     "exec": "ts-node -r dotenv/config --project tsconfig.server.json server/index.ts"
