@@ -1,11 +1,11 @@
 import { FunctionComponent } from "react";
+import SmallPage from "./SmallPage";
 
 const LoggedOutIndex: FunctionComponent = () => (
-    <div>
-        <h1>Marauder's Map for Codam</h1>
+    <SmallPage>
         <p>Before we start,</p>
         <p><a href="/auth">“I solemnly swear that I am up to no good.”</a></p>
-    </div>
+    </SmallPage>
 );
 
 export default LoggedOutIndex;
