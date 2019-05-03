@@ -4,7 +4,15 @@ A very reasonable (and early alpha) map for the codam clusters
 
 # Setup
 
-1. Install [Node.js] and [Redis]
+1. [Request API keys] for the intranet. The redirect URI should be
+   `http://localhost:3000/auth/callback` and we only need the "Access the user
+   public data" scope.
+2. Store the `UID` and `SECRET` in a `.env` file at the root of the repository:
+   ```
+   UID=your_uid_here
+   SECRET=your_secret_here
+   ```
+3. Install [Node.js] and [Redis]
 
    If you are on a Codam iMac you can install them using homebrew:
    1. Install [42 Homebrew]:
@@ -15,14 +23,6 @@ A very reasonable (and early alpha) map for the codam clusters
       ```
       brew install node redis
       ```
-2. [Request API keys] for the intranet. The redirect URI should be
-   `http://localhost:3000/auth/callback` and we only need the "Access the user
-   public data" scope.
-3. Store the keys in `.env`:
-   ```
-   UID=your_uid_here
-   SECRET=your_secret_here
-   ```
 4. Install dependencies using `npm i`
 
 # Running locally
