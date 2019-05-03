@@ -15,7 +15,9 @@ A very reasonable (and early alpha) map for the codam clusters
       ```
       brew install node redis
       ```
-2. [Request API keys] for the intranet.
+2. [Request API keys] for the intranet. The redirect URI should be
+   `http://localhost:3000/auth/callback` and we only need the "Access the user
+   public data" scope.
 3. Store the keys in `.env`:
    ```
    UID=your_uid_here
