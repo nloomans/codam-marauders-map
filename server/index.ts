@@ -9,6 +9,7 @@ import makeIo = require('socket.io');
 import makeSession from './session';
 import pull from './pull';
 import { Locations } from '../types';
+import getSessionStatus from '../utils/getSessionStatus';
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
@@ -40,6 +41,10 @@ function main() {
         } else {
             console.log('Client connected, locations not ready yet');
         }
+    });
+
+    app.get('/api/session/status', (req, res) => {
+        res.json(getSessionStatus(req));
     });
 
     app.get('/whoami', (req, res) => {
