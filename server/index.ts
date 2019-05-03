@@ -1,17 +1,17 @@
-import * as http from 'http'
-import next = require('next');
+import * as http from "http";
+import next = require("next");
 
-import express = require('express');
+import express = require("express");
 
-import * as redis from 'redis';
-import makeIo = require('socket.io');
+import * as redis from "redis";
+import makeIo = require("socket.io");
 
-import makeSession from './session';
-import pull from './pull';
-import { Locations } from '../types';
-import getSessionStatus from '../utils/getSessionStatus';
+import { ILocations } from "../types";
+import getSessionStatus from "../utils/getSessionStatus";
+import pull from "./pull";
+import makeSession from "./session";
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 3000;
 
 const nextInstance = next({ dev });
@@ -26,32 +26,32 @@ app.use(session.express());
 io.use(session.socketIo());
 
 function main() {
-    let locations: Locations = {};
+    let locations: ILocations = {};
 
-    pull(newLocations => {
+    pull((newLocations) => {
         locations = newLocations;
         console.log(`Sending locations to ${Object.keys(io.sockets.connected).length} clients`);
-        io.emit('locations', locations);
+        io.emit("locations", locations);
     }).catch(exitWithError);
 
-    io.on('connection', (socket) => {
+    io.on("connection", (socket) => {
         if (locations) {
-            console.log('Client connected, sending locations');
-            socket.emit('locations', locations);
+            console.log("Client connected, sending locations");
+            socket.emit("locations", locations);
         } else {
-            console.log('Client connected, locations not ready yet');
+            console.log("Client connected, locations not ready yet");
         }
     });
 
-    app.get('/api/session/status', (req, res) => {
+    app.get("/api/session/status", (req, res) => {
         res.json(getSessionStatus(req));
     });
 
-    app.get('/whoami', (req, res) => {
+    app.get("/whoami", (req, res) => {
         res.json(req.user);
     });
 
-    app.get('*', (req, res) => {
+    app.get("*", (req, res) => {
         return handle(req, res);
     });
 
@@ -62,7 +62,7 @@ function main() {
 
 function exitWithError(ex: Error) {
     console.error(ex.stack);
-    process.exit(1)
+    process.exit(1);
 }
 
 nextInstance.prepare().then(main).catch(exitWithError);

@@ -1,13 +1,13 @@
-import { WithSession } from "../types";
+import { IWithSession } from "../types";
 
-type SessionStatus = {
-	loggedIn: boolean;
+interface ISessionStatus {
+    loggedIn: boolean;
 }
 
-export default function getSessionStatus(req: WithSession): SessionStatus {
-	if (req.user) {
-		return { loggedIn: true };
-	} else {
-		return { loggedIn: false };
-	}
+export default function getSessionStatus(req: IWithSession): ISessionStatus {
+    if (req.user) {
+        return { loggedIn: true };
+    } else {
+        return { loggedIn: false };
+    }
 }

@@ -1,13 +1,12 @@
-export type Locations = {
-    [login: string]: string,
+export interface ILocations {
+    [login: string]: string;
 }
 
-export type Session = {
-    id: number,
-    login: string,
+export interface ISession {
+    id: number;
+    login: string;
 }
 
-
-export type WithSession = {
-	user?: Session,
+export interface IWithSession {
+    user?: ISession;
 }

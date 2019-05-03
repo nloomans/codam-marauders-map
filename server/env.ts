@@ -1,15 +1,15 @@
 if (process.env.UID === undefined || process.env.SECRET === undefined) {
-    throw "Missing UID or SECRET env. Do you have a .env file?";
+    throw new Error("Missing UID or SECRET env. Do you have a .env file?");
 }
 
-export type Env = {
-	UID: string,
-	SECRET: string,
+export interface IEnv {
+    SECRET: string;
+    UID: string;
 }
 
-const env: Env = {
-	UID: process.env.UID,
-	SECRET: process.env.SECRET,
-}
+const env: IEnv = {
+    SECRET: process.env.SECRET,
+    UID: process.env.UID,
+};
 
 export default env;
