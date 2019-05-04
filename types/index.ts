@@ -10,3 +10,14 @@ export interface ISession {
 export interface IWithSession {
     user?: ISession;
 }
+
+export type ISessionStatus = ISessionStatusLoggedIn | ISessionStatusLoggedOut;
+
+export interface ISessionStatusLoggedOut {
+    loggedIn: false;
+}
+
+export interface ISessionStatusLoggedIn {
+    loggedIn: true;
+    login: string;
+}

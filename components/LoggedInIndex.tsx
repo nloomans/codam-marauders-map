@@ -1,10 +1,11 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import makeIo from "socket.io-client";
 import Map from "../components/Map";
-import { ILocations } from "../types";
+import { ILocations, ISessionStatusLoggedIn } from "../types";
+import Page from "./Page";
 
 interface IProps {
-    login?: string;
+    sessionStatus: ISessionStatusLoggedIn;
 }
 
 type ILocationsState
@@ -51,25 +52,27 @@ const useLocations = (): ILocationsState => {
     return state;
 };
 
-const LoggedInIndex: FunctionComponent<IProps> = () => {
+const LoggedInIndex: FunctionComponent<IProps> = ({ sessionStatus }) => {
     const state = useLocations();
 
     switch (state.type) {
         case "successful":
             return (
-                <main>
-                    <ul>
-                        {Object.keys(state.locations).map((login) =>
-                            <li key={login}>{login} - {state.locations[login]}</li>,
-                        )}
-                    </ul>
-                    <Map locations={state.locations} />
-                </main>
+                <Page sessionStatus={sessionStatus}>
+                    <main>
+                        <ul>
+                            {Object.keys(state.locations).map((login) =>
+                                <li key={login}>{login} - {state.locations[login]}</li>,
+                            )}
+                        </ul>
+                        <Map locations={state.locations} />
+                    </main>
+                </Page>
             );
         case "error":
-            return <main>Failed to connect: {state.error}</main>;
+            return <Page sessionStatus={sessionStatus}><main>Failed to connect: {state.error}</main></Page>;
         case "loading":
-            return <main>Loading...</main>;
+            return <Page sessionStatus={sessionStatus}><main>Loading...</main></Page>;
     }
 };
 

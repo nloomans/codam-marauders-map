@@ -2,17 +2,17 @@ import axios from "axios";
 import { NextContext, NextFunctionComponent } from "next";
 import LoggedInIndex from "../components/LoggedInIndex";
 import LoggedOutIndex from "../components/LoggedOutIndex";
-import { IWithSession } from "../types";
+import { ISessionStatus, IWithSession } from "../types";
 import getSessionStatus from "../utils/getSessionStatus";
 
 interface IProps {
-    loggedIn: boolean;
+    sessionStatus: ISessionStatus;
 }
 
 const Index: NextFunctionComponent<IProps, {}, NextContext<{}, IWithSession>> =
-    ({ loggedIn }) => {
-        if (loggedIn) {
-            return <LoggedInIndex />;
+    ({ sessionStatus }) => {
+        if (sessionStatus.loggedIn) {
+            return <LoggedInIndex sessionStatus={sessionStatus} />;
         } else {
             return <LoggedOutIndex />;
         }
@@ -20,12 +20,12 @@ const Index: NextFunctionComponent<IProps, {}, NextContext<{}, IWithSession>> =
 
 Index.getInitialProps = async ({ req }) => {
     if (req) {
-        return getSessionStatus(req);
+        return { sessionStatus: getSessionStatus(req) };
     } else {
         const res = await axios({
             url: "/api/session/status",
         });
-        return res.data;
+        return { sessionStatus: res.data };
     }
 };
 
