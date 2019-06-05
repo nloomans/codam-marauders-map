@@ -8,7 +8,7 @@
     "lint": "tslint --project tslint.json",
     "lint:fix": "tslint --project tslint.json --fix",
     "build": "next build && tsc && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production node -r dotenv/config .next/server"
+    "start": "NODE_ENV=production node -r dotenv/config .next/server/server"
   },
   "repository": {
     "type": "git",
