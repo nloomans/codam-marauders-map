@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FunctionComponent } from "react";
 
 interface IProps {
@@ -22,7 +23,11 @@ const Header: FunctionComponent<IProps> = ({ login }) => (
                 flex-grow: 1;
             }
 
-            .login {
+            .profile {
+                display: flex;
+            }
+
+            .username, .logout {
                 font-size: 16px;
                 margin: 16px;
             }
@@ -38,13 +43,31 @@ const Header: FunctionComponent<IProps> = ({ login }) => (
                 border-radius: 50%;
                 background-size: cover;
             }
+
+            // change username to logout link on hover
+            .logout {
+                display: none;
+                color: white;
+                text-decoration: underline;
+            }
+
+            .profile:hover .logout {
+                display: block;
+            }
+
+            .profile:hover .username {
+                display: none;
+            }
         `}</style>
         <h1>Marauder's Map for Codam</h1>
         <div className="grow" />
-        <div className="login">{login}</div>
-        <div className="profile-picture"  style={{
-            backgroundImage: `url(https://cdn.intra.42.fr/users/small_${login}.jpg)`,
-        }} />
+        <div className="profile">
+            <div className="username">{login}</div>
+            <Link href="/auth/logout"><a className="logout">logout</a></Link>
+            <div className="profile-picture"  style={{
+                backgroundImage: `url(https://cdn.intra.42.fr/users/small_${login}.jpg)`,
+            }} />
+        </div>
     </header>
 );
 

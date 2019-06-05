@@ -51,6 +51,10 @@ export default (redisClient: RedisClient) => {
             });
 
             app.get("/auth", passport.authenticate("42"));
+            app.get("/auth/logout", (req, res) => {
+                req.logout();
+                res.redirect("/");
+            });
             app.get("/auth/callback",
                 passport.authenticate("42", { failureRedirect: "/login-failed" }),
                 (_req, res) => res.redirect("/"),
