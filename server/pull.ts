@@ -3,55 +3,52 @@ import httpLinkHeader from "http-link-header";
 import { create as makeOauth2, AccessToken, OAuthClient } from "simple-oauth2";
 import { ILocations } from "../types";
 
-if (process.env.UID === undefined || process.env.SECRET === undefined) {
-    throw new Error("Missing UID or SECRET env. Do you have a .env file?");
-}
-
-const oauth2 = makeOauth2({
-    auth: {
-        tokenHost: "https://api.intra.42.fr",
-    },
-    client: {
-        id: process.env.UID,
-        secret: process.env.SECRET,
-    },
-});
-
 const sleep = (ms: number) =>
     new Promise((resolve) => global.setTimeout(resolve, ms));
 
 const pad = (str: string, n: number): string =>
     str.length < n ? pad(str + " ", n) : str;
 
-interface ISendGetRequest {
-    (url: string): Promise<any>;
-}
-interface IGetAccessToken {
-    (): Promise<string>;
+export interface IGetAccessToken {
+    (): Promise<AccessToken>;
 }
 
 const makeGetAccessToken =
-    (oauth2Client: OAuthClient<"client_id">): IGetAccessToken => {
+    (oauthClient: OAuthClient): IGetAccessToken => async () =>
+        oauthClient.accessToken.create(
+            oauthClient.clientCredentials.getToken({}));
+
+export interface IGetRefreshingAccessToken {
+    (): Promise<string>;
+}
+
+export const makeGetRefreshingAccessToken =
+    (getAccessToken: IGetAccessToken): IGetRefreshingAccessToken => {
         let tokenCache: AccessToken | null = null;
 
         return async (): Promise<string> => {
             if (tokenCache == null || tokenCache.expired()) {
-                tokenCache = oauth2Client.accessToken.create(
-                    await oauth2Client.clientCredentials.getToken({}));
+                tokenCache = await getAccessToken();
             }
             return tokenCache.token.access_token;
         }
     }
 
-const makeSendGetRequest =
-    (axiosInstance: AxiosInstance, getAccessToken: IGetAccessToken): ISendGetRequest =>
-        async (url: string): Promise<any> => {
-            return axiosInstance.get(url, {
-                headers: {
-                    Authorization: `Bearer ${await getAccessToken()}`,
-                }
-            });
-        };
+interface ISendGetRequest {
+    (url: string): Promise<any>;
+}
+
+const makeSendGetRequest = (
+    axiosInstance: AxiosInstance,
+    getRefreshingAccessToken: IGetRefreshingAccessToken
+): ISendGetRequest =>
+    async (url: string): Promise<any> => {
+        return axiosInstance.get(url, {
+            headers: {
+                Authorization: `Bearer ${await getRefreshingAccessToken()}`,
+            }
+        });
+    };
 
 const makeGetAllPages = (sendGetRequest: ISendGetRequest) =>
     async function getAllPages(url: string, acc = []): Promise<any> {
@@ -67,9 +64,26 @@ const makeGetAllPages = (sendGetRequest: ISendGetRequest) =>
     };
 
 export default async function pull(callback: (locations: ILocations) => void) {
+    if (process.env.UID === undefined || process.env.SECRET === undefined) {
+        throw new Error("Missing UID or SECRET env. Do you have a .env file?");
+    }
+
+    const oauthClient = makeOauth2({
+        auth: {
+            tokenHost: "https://api.intra.42.fr",
+        },
+        client: {
+            id: process.env.UID,
+            secret: process.env.SECRET,
+        },
+    });
+
     const axiosInstance = axios.create();
-    const getAccessToken = makeGetAccessToken(oauth2);
-    const sendGetRequest = makeSendGetRequest(axiosInstance, getAccessToken);
+    const getAccessToken = makeGetAccessToken(oauthClient);
+    const getRefreshingAccessToken =
+        makeGetRefreshingAccessToken(getAccessToken);
+    const sendGetRequest =
+        makeSendGetRequest(axiosInstance, getRefreshingAccessToken);
 
     // TODO: replace any with proper types
     const getAllPages = makeGetAllPages(sendGetRequest);
