@@ -33,7 +33,7 @@ export default (redisClient: RedisClient) => {
 
             passport.use(new FortyTwoStrategy(
                 {
-                    callbackURL: "http://localhost:3000/auth/callback",
+                    callbackURL: env.CALLBACK_URL,
                     clientID: env.UID,
                     clientSecret: env.SECRET,
                 },
