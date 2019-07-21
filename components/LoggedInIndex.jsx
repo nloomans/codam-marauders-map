@@ -1,43 +1,19 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import makeIo from "socket.io-client";
-import Map from "../components/Map";
-import { ILocations, ISessionStatusLoggedIn } from "../types";
+import Map from "./Map";
 import Page from "./Page";
 
-interface IProps {
-    sessionStatus: ISessionStatusLoggedIn;
-}
-
-type ILocationsState
-    = ILocationsSuccessfulState
-    | ILocationsErrorState
-    | ILocationsLoadingState;
-
-interface ILocationsSuccessfulState {
-    type: "successful";
-    locations: ILocations;
-}
-
-interface ILocationsErrorState {
-    type: "error";
-    error: string;
-}
-
-interface ILocationsLoadingState {
-    type: "loading";
-}
-
-const useLocations = (): ILocationsState => {
-    const [state, setState] = useState<ILocationsState>({ type: "loading" });
+const useLocations = () => {
+    const [state, setState] = useState({ type: "loading" });
 
     useEffect(() => {
         const socket = makeIo();
 
-        socket.on("locations", (locations: ILocations) => {
+        socket.on("locations", (locations) => {
             setState({ type: "successful", locations });
         });
 
-        function onError(error: string) {
+        function onError(error) {
             setState({ type: "error", error });
         }
 
@@ -52,7 +28,7 @@ const useLocations = (): ILocationsState => {
     return state;
 };
 
-const LoggedInIndex: FunctionComponent<IProps> = ({ sessionStatus }) => {
+const LoggedInIndex = ({ sessionStatus }) => {
     const state = useLocations();
 
     switch (state.type) {

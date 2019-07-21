@@ -1,15 +1,14 @@
-import * as http from "http";
-import next = require("next");
+const http = require("http");
+const next = require("next");
 
-import express = require("express");
+const express = require("express");
 
-import * as redis from "redis";
-import makeIo = require("socket.io");
+const redis = require("redis");
+const makeIo = require("socket.io");
 
-import { ILocations } from "../types";
-import getSessionStatus from "../utils/getSessionStatus";
-import pull from "./pull";
-import makeSession from "./session";
+const getSessionStatus = require("../utils/getSessionStatus");
+const pull = require("./pull");
+const makeSession = require("./session");
 
 const dev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 3000;
@@ -26,7 +25,7 @@ app.use(session.express());
 io.use(session.socketIo());
 
 function main() {
-    let locations: ILocations = {};
+    let locations = {};
 
     pull((newLocations) => {
         locations = newLocations;
@@ -60,7 +59,7 @@ function main() {
     });
 }
 
-function exitWithError(ex: Error) {
+function exitWithError(ex) {
     console.error(ex.stack);
     process.exit(1);
 }

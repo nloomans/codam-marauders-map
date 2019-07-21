@@ -1,18 +1,16 @@
-import * as bodyParser from "body-parser";
-import makeRedisStore = require("connect-redis");
-import cookieParser = require("cookie-parser");
-import { Router } from "express";
-import session = require("express-session");
-import * as passport from "passport";
-import FortyTwoStrategy = require("passport-42");
-import passportSocketIo = require("passport.socketio");
-import { RedisClient } from "redis";
-
-import env from "./env";
+const { Router } = require("express");
+const bodyParser = require("body-parser");
+const makeRedisStore = require("connect-redis");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("passport");
+const FortyTwoStrategy = require("passport-42");
+const passportSocketIo = require("passport.socketio");
+const env = require("./env");
 
 const SESSION_SECRET = "TODO: Replace this with something randomly generated";
 
-export default (redisClient: RedisClient) => {
+module.exports = (redisClient) => {
     const RedisStore = makeRedisStore(session);
     const store = new RedisStore({ client: redisClient });
 

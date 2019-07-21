@@ -1,9 +1,9 @@
-import App, { Container, NextAppContext } from "next/app";
+import App, { Container } from "next/app";
 import React from "react";
 import Layout from "../components/Layout";
 
 class MapApp extends App {
-    public static async getInitialProps({ Component, ctx }: NextAppContext) {
+    static async getInitialProps({ Component, ctx }) {
         let pageProps = {};
 
         if (Component.getInitialProps) {
@@ -13,7 +13,7 @@ class MapApp extends App {
         return { pageProps };
     }
 
-    public render() {
+    render() {
         const { Component, pageProps } = this.props;
 
         return (

@@ -1,7 +1,7 @@
+import React from "react";
 import Head from "next/head";
-import { FunctionComponent } from "react";
 
-const Layout: FunctionComponent = ({ children }) => {
+const Layout = ({ children }) => {
     return (
         <>
             <Head>

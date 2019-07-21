@@ -1,12 +1,7 @@
-import { FunctionComponent } from "react";
+import React from "react";
 import * as map from "../resources/map";
-import { ILocations } from "../types";
 
-interface IProps {
-    locations: ILocations;
-}
-
-const View: FunctionComponent<IProps> = ({ locations }) => (
+const View = ({ locations }) => (
     <div style={{ position: "relative" }}>
         <img src={map.svg} />
         {Object.keys(locations).map((login) => {

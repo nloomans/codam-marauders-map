@@ -1,6 +1,6 @@
-import { FunctionComponent } from "react";
+import React from "react";
 
-const SmallPage: FunctionComponent = ({ children }) => (
+const SmallPage = ({ children }) => (
     <div className="SmallPage">
         <style jsx>{`
             .SmallPage {

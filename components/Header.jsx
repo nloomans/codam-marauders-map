@@ -1,11 +1,7 @@
+import React from "react";
 import Link from "next/link";
-import { FunctionComponent } from "react";
 
-interface IProps {
-    login: string;
-}
-
-const Header: FunctionComponent<IProps> = ({ login }) => (
+const Header = ({ login }) => (
     <header>
         <style jsx>{`
             header {
@@ -64,7 +60,7 @@ const Header: FunctionComponent<IProps> = ({ login }) => (
         <div className="profile">
             <div className="username">{login}</div>
             <Link href="/auth/logout"><a className="logout">logout</a></Link>
-            <div className="profile-picture"  style={{
+            <div className="profile-picture" style={{
                 backgroundImage: `url(https://cdn.intra.42.fr/users/small_${login}.jpg)`,
             }} />
         </div>

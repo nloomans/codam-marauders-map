@@ -1,15 +1,9 @@
 import axios from "axios";
-import { NextContext, NextFunctionComponent } from "next";
 import LoggedInIndex from "../components/LoggedInIndex";
 import LoggedOutIndex from "../components/LoggedOutIndex";
-import { ISessionStatus, IWithSession } from "../types";
 import getSessionStatus from "../utils/getSessionStatus";
 
-interface IProps {
-    sessionStatus: ISessionStatus;
-}
-
-const Index: NextFunctionComponent<IProps, {}, NextContext<{}, IWithSession>> =
+const Index =
     ({ sessionStatus }) => {
         if (sessionStatus.loggedIn) {
             return <LoggedInIndex sessionStatus={sessionStatus} />;
